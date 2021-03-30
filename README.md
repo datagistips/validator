@@ -65,6 +65,6 @@ The data mapping file **keeps track** of your restructuration process. You can u
 - Date : 30th of March 2021
 - Licence : Affero-GPL
 
-[See CHANGELOG for version details](CHANGELOG)
+[See CHANGELOG for version details](CHANGELOG.md)
 
 
