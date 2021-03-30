@@ -42,7 +42,9 @@ def write_log(files, columns, log):
 	# dd/mm/YY H:M:S
 	now = datetime.now()
 	dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-	l = ("date and time : %s\n"%dt_string)	
+	l = ("Date and time : %s\n"%dt_string)	
+	f.write(l)
+	l = ("------------------------\n")
 	f.write(l)
 
 	# Ecriture du fichier source et du standard de destination #########################
@@ -54,24 +56,53 @@ def write_log(files, columns, log):
 	f.write(l)
 	l = ('Data Schema : %s\n')%(standard_name)
 	f.write(l)
-
-	# Ecriture de la vue standard #########################
+	l = ("------------------------\n")
+	f.write(l)
 	
-	l = ("schema <- data :\n")
+	
+	# Data Schema
+	
+	l = ("[SCHEMA]\n")
 	f.write(l)
 	
 	standard_fields = columns[0]
 	standard_descriptions = columns[1]
+	
+	for i, elt in enumerate(standard_fields):
+		l = ('%s : %s\n')%(elt, standard_descriptions[i])
+		f.write(l)
+	l = ("------------------------\n")
+	f.write(l)
+
+
+	# Data Schema conformance #########################
+	
+	l = ("[SCHEMA <- DATA]\n")
+	f.write(l)
+	
 	columns_mapped = columns[2]
 	
 	for i, elt in enumerate(standard_fields):
 		standard_field = standard_fields[i]
-		standard_description = standard_descriptions[i]
 		if standard_field in columns_mapped:
 			lib_source_column = str(list(data.columns)[columns_mapped.index(standard_field)])
 		else:
 			lib_source_column = '_X_'
-		l = ("%s (%s) <- %s\n")%(standard_field, standard_description, lib_source_column)
+		l = ("%s <- %s\n")%(standard_field, lib_source_column)
+		f.write(l)
+		
+	l = ("------------------------\n")
+	f.write(l)
+	
+	
+	# Data Transformation #########################
+	
+	l = ("[DATA <- SCHEMA]\n")
+	f.write(l)
+	for i, elt in enumerate(list(data.columns)):
+		data_colonne = elt
+		column_mapped = columns_mapped[i]
+		l = ("%s -> %s\n")%(data_colonne, column_mapped if column_mapped is not None else '_X_')
 		f.write(l)
 		
 	f.close()

@@ -1,8 +1,8 @@
 from,to
-id_site,id_site
-ok,_ok
-lib,_lib
 fid,_fid
-date,_date
-heure,_heure
 id,_id
+lib,_lib
+date,date_maj
+heure,_heure
+ok,_ok
+id_site,id_site
