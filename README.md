@@ -40,11 +40,11 @@ There are 3 output files.
 ![](images/exports.png)
 
 1. the **restructured** data with suffix `-mapped`
-- the **mapping or matching file** with suffix `-mapping` which contains source and target field names
+2. the **mapping or matching file** with suffix `-mapping` which contains source and target field names
 
 	![](images/mapping.png)
 
-- a **log** `-log` with date time, input data and data schema name, details on schema conformance and data transformation.
+3. a **log** `-log` with date time, input data and data schema name, details on schema conformance and data transformation.
 
 	![](images/log.png)
 
