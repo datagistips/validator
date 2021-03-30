@@ -1,0 +1,9 @@
+date and time : 30/03/2021 22:55:18
+Input data : data-mapped.csv
+Data Schema : standard.csv
+schema <- data :
+id_site (identifiant du site) <- id_site
+date_maj (date de mise à jour) <- X
+nb_sites (nombre de sites) <- X
+is_ok (ok ?) <- X
+libelle ( libellé du site) <- X

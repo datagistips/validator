@@ -1,0 +1,2 @@
+- v.0.2 : generates a log or the restructuration and fixes py2 script
+- v.0.1 : first version

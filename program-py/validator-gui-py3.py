@@ -6,10 +6,6 @@ import pandas as pd
 
 # GUI
 from tkinter import *
-# ~ import ScrolledText
-# ~ import ttk
-# ~ import tkFileDialog
-# ~ import tkMessageBox
 from tkinter import scrolledtext, filedialog, ttk, messagebox
 
 # BASIC
@@ -19,20 +15,70 @@ import re
 import os
 import sys
 import random
+from datetime import datetime
 
-global data
-global standard
-global input_file
-global is_populated
-global foo
-
+# GLOBAL VARIABLES
+global data, standard, input_file, columns_mapped, is_populated
 data = None
 standard = None
 input_file = None
-populated = False
 is_populated = False
 
 
+def write_log(files, columns, log):
+	'''
+	Write log of transforming file
+	- Date and time
+	- Input data and Data Schema name
+	- Correspondence between Data Schema and Input Data Fields
+	'''
+	
+	f = open(log,"w+")
+	
+
+	# Ecriture de la date #########################
+	# dd/mm/YY H:M:S
+	now = datetime.now()
+	dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+	l = ("date and time : %s\n"%dt_string)	
+	f.write(l)
+
+
+	# Ecriture du fichier source et du standard de destination #########################
+
+	input_name = files[0]
+	standard_name = files[1]
+	
+	l = ('Input data : %s\n')%(input_name)
+	f.write(l)
+	l = ('Data Schema : %s\n')%(standard_name)
+	f.write(l)
+
+
+	# Ecriture de la vue standard #########################
+	
+	l = ("schema <- data :\n")
+	f.write(l)
+	
+	standard_fields = columns[0]
+	standard_descriptions = columns[1]
+	columns_mapped = columns[2]
+	
+	for i, elt in enumerate(standard_fields):
+		
+		standard_field = standard_fields[i]
+		standard_description = standard_descriptions[i]
+		if standard_field in columns_mapped:
+			lib_source_column = str(list(data.columns)[columns_mapped.index(standard_field)])
+		else:
+			lib_source_column = 'X'
+			
+		l = ("%s (%s) <- %s\n")%(standard_field, standard_description, lib_source_column)
+		f.write(l)
+		
+	f.close()
+	
+	
 def populate(frame, data = None, standard = None):
 	'''
 	Function that populates the right panel
@@ -150,8 +196,6 @@ def clicked_data():
 	if input_name_extension == "csv":
 		data = data.drop(['geometry'], axis = 1)
 		
-	print(data)
-
 	# We display information in the data information box
 	print_data(data)
 
@@ -167,14 +211,14 @@ def clicked_standard():
 	When we click on standard, we populate the mapping box
 	'''
 
-	global standard
+	global standard, standard_name
 	
 	file = filedialog.askopenfilename(initialdir= path.dirname(__file__), filetypes=[("CSV delimited files", ".csv")])
 	input_file = file
-	standard  = pd.read_csv(file)
-	input_name = os.path.basename(input_file)
+	standard  = pd.read_csv(file, encoding = "iso-8859-1")
+	standard_name = os.path.basename(input_file)
 
-	lbl2.config(text = input_name)
+	lbl2.config(text = standard_name)
 	
 	populate(rightframe, data, standard)
 	
@@ -186,6 +230,18 @@ def clicked_shuffle():
 	
 	if data is not None:
 		print_data(data)
+		
+
+def get_columns_mapped():
+	'''
+	Are columns mapped ?
+	It traverses the comboboxes to retrieve the matched data schema columns
+	The list is of the the length of number or input data columns
+	It stores the target field names
+	'''
+	
+	columns_mapped = [elt.get() if elt.current() >  0 else None for elt in combos]
+	return(columns_mapped)
 
 
 def get_mapping_file(data):
@@ -247,6 +303,9 @@ def clicked_rename():
 
 	# Rename data
 	data2 = get_renamed_data(data)
+	
+	# Are columns mapped 	
+	columns_mapped = get_columns_mapped()
 
 	# Export transformed and restructured data
 	output_name = input_name_without_extension + '-mapped'
@@ -267,9 +326,21 @@ def clicked_rename():
 	output_mapping = output_mapping_name + '.csv'
 	df.to_csv(output_mapping, index = False)
 	
+	# Get names
 	output_file_name = os.path.basename(output_file)
 	output_mapping_name = os.path.basename(output_mapping)
-	msg = ("Restructured file -> %s\nMapping file -> %s")%(output_file_name, output_mapping_name)
+	
+	
+	# Export Log ###################################################
+	
+	output_log = input_name_without_extension + '-log.txt'
+	output_log_name = os.path.basename(output_log)
+	write_log((output_file_name, standard_name), (standard.iloc[:,0], standard.iloc[:,1], columns_mapped), output_log)
+	
+	
+	# Messages #####################################################
+
+	msg = ("Restructured file -> %s\nMapping file -> %s\n Log -> %s")%(output_file_name, output_mapping_name, output_log_name)
 	msg = msg.encode('utf8')
 	messagebox.showinfo("Export OK !", msg)
 
@@ -277,7 +348,7 @@ def clicked_rename():
 # Window ##################################################
 
 root = Tk()
-root.title("Validator-v.0.1")
+root.title("Validator-v.0.2")
 
 
 # Left frame ################################################
