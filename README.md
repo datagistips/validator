@@ -17,7 +17,7 @@ Validator is a data exploration, validation and restructuration assistant.
 
 2.  **Shuffle** your data, to explore unique values.
 
-	![](images/shuffle.png)
+	![](images/demo-shuffle.gif)
 
 - Load your **schema** (first column of the CSV must define the field name)
 
