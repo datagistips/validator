@@ -35,10 +35,11 @@ Validator is a data exploration, validation and restructuration assistant.
 
 ## Output files
 
-There are 2 output files : 
+There are 3 output files : 
 
-1. the **restructured** data
-- the **2-column data mapping file** with source and target field names
+1. the **restructured** data with suffix `-mapped`
+- the **mapping or matching file** with suffix `-mapping` which contains source and target field names
+- a **log** `-log` with date time, input data and data schema name, details on schema conformance and data transformation.
 
 	![](images/exports.png)
 
