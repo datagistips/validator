@@ -35,15 +35,18 @@ Validator is a data exploration, validation and restructuration assistant.
 
 ## Output files
 
-There are 3 output files : 
+There are 3 output files.
+
+![](images/exports.png)
 
 1. the **restructured** data with suffix `-mapped`
 - the **mapping or matching file** with suffix `-mapping` which contains source and target field names
+
+	![](images/mapping.png)
+
 - a **log** `-log` with date time, input data and data schema name, details on schema conformance and data transformation.
 
-	![](images/exports.png)
-
-![](images/demo2.gif)
+	![](images/log.png)
 
 ## Data formats
 Input data format can be either CSV, Geopackage (GPKG) or ESRI Shapefiles (SHP).
