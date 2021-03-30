@@ -1,4 +1,4 @@
-date and time : 30/03/2021 22:55:18
+date and time : 30/03/2021 22:28:49
 Input data : data-mapped.csv
 Data Schema : standard.csv
 schema <- data :

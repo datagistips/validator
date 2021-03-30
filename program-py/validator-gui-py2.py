@@ -70,7 +70,7 @@ def write_log(files, columns, log):
 		if standard_field in columns_mapped:
 			lib_source_column = str(list(data.columns)[columns_mapped.index(standard_field)])
 		else:
-			lib_source_column = 'X'
+			lib_source_column = '_X_'
 		l = ("%s (%s) <- %s\n")%(standard_field, standard_description, lib_source_column)
 		f.write(l)
 		
