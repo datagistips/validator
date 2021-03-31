@@ -4,7 +4,7 @@ Validator is a data exploration, validation and restructuration assistant.
 
 ![](images/demo.gif)
 
-## Quick start (in 4 steps)
+## 📘 Quick start (in 4 steps)
 1. **Launch** validator
 
 
@@ -33,7 +33,7 @@ Validator is a data exploration, validation and restructuration assistant.
 
 	![](images/rename.png)
 
-## Output files
+## 📄 file Output files
 
 There are 3 output files.
 
@@ -48,17 +48,17 @@ There are 3 output files.
 
 	![](images/log.png)
 
-## Data formats
+## 📄 Data formats
 Input data format can be either CSV, Geopackage (GPKG) or ESRI Shapefiles (SHP).
 
-## Details
+## 🔎 Details
 ### Shuffle
 In the exploration box, only 10 unique values are displayed, but you can shuffle your data to explore more unique values.
 
 ### The data mapping file
 The data mapping file **keeps track** of your restructuration process. You can use this file in other CLI programs or scripts to restructure other pools of data programmatically.
 
-## Road map
+## 🚗 Road map
 - control data types (integer, float, etc...)
 - control regexes (`^[A-Za-z\s\-\u00C0-\u00FF]+$`, etc...)
 - CLI Program
