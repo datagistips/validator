@@ -33,7 +33,7 @@ Validator is a data exploration, validation and restructuration assistant.
 
 	![](images/rename.png)
 
-## 📄 file Output files
+## 📄 Output files
 
 There are 3 output files.
 
