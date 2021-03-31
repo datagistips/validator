@@ -5,27 +5,26 @@ Validator is a data exploration 🔍, validation ✔️ and restructuration ↔�
 ![](images/demo.gif)
 
 ## 📘 Quick start (in 4️⃣ steps)
-1. **Launch** validator
+**Launch** validator
 
-
-		RUN-validator-gui-py2.py # if python2
-		RUN-validator-gui-py3.py # if python3
+	RUN-validator-gui-py2.py # if python2
+	RUN-validator-gui-py3.py # if python3
 
 1️⃣ Load your **data**
 
-	![](images/load-data.png)
+![](images/load-data.png)
 
 2️⃣  **Shuffle** your data, to explore unique values.
 
-	![](images/demo-shuffle.gif)
+![](images/demo-shuffle.gif)
 
 3️⃣ Load your **schema** (where first column of the CSV defines the field name)
 
-	![](images/standard.png)
+![](images/standard.png)
 
 4️⃣ **Match** the source field names of your data to your target field names
 
-	![](images/match.png)
+![](images/match.png)
 
 > If source and target names are the same, they will be automatically matched (like `id_site` in the above example).
 
