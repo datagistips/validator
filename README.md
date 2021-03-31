@@ -1,6 +1,6 @@
 # validator
 
-Validator ✔️ is a data exploration, validation and restructuration assistant.
+Validator is a data exploration 🔍, validation ✔️ and restructuration ↔️ assistant.
 
 ![](images/demo.gif)
 
