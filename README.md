@@ -14,21 +14,21 @@ Validator is a data exploration 🔍, validation ✔️ and restructuration ↔�
 
 ![](images/load-data.png)
 
-2️⃣  **Shuffle** your data, to explore unique values.
+ **Shuffle** your data, to explore unique values.
 
 ![](images/demo-shuffle.gif)
 
-3️⃣ Load your **schema** (where first column of the CSV defines the field name)
+2️⃣ Load your **schema** (where first column of the CSV defines the field name)
 
 ![](images/standard.png)
 
-4️⃣ **Match** the source field names of your data to your target field names
+3️⃣ **Match** the source field names of your data to your target field names
 
 ![](images/match.png)
 
 > If source and target names are the same, they will be automatically matched (like `id_site` in the above example).
 
-- **Export** the result
+4️⃣ **Export** the result
 
 	![](images/rename.png)
 
