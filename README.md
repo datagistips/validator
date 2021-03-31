@@ -11,19 +11,19 @@ Validator is a data exploration 🔍, validation ✔️ and restructuration ↔�
 		RUN-validator-gui-py2.py # if python2
 		RUN-validator-gui-py3.py # if python3
 
-1.  Load your **data**
+1️⃣ Load your **data**
 
 	![](images/load-data.png)
 
-2.  **Shuffle** your data, to explore unique values.
+2️⃣  **Shuffle** your data, to explore unique values.
 
 	![](images/demo-shuffle.gif)
 
-- Load your **schema** (where first column of the CSV defines the field name)
+3️⃣ Load your **schema** (where first column of the CSV defines the field name)
 
 	![](images/standard.png)
 
-- **Match** the source field names of your data to your target field names
+4️⃣ **Match** the source field names of your data to your target field names
 
 	![](images/match.png)
 
