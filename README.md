@@ -4,7 +4,7 @@ Validator is a data exploration 🔍, validation ✔️ and restructuration ↔�
 
 ![](images/demo.gif)
 
-## 📘 Quick start (in 4 steps)
+## 📘 Quick start (in 4️⃣ steps)
 1. **Launch** validator
 
 
