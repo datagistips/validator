@@ -1,4 +1,4 @@
-Date and time : 31/03/2021 19:28:55
+Date and time : 31/03/2021 19:34:28
 ------------------------
 Input data : data.csv
 Data schema : standard.csv
@@ -14,7 +14,7 @@ libelle :  libellé du site
 ------------------------
 [SCHEMA <- DATA]
 id_site <- id_site
-date_maj <- __
+date_maj <- date
 nb_sites <- __
 is_ok <- __
 libelle <- __
@@ -23,7 +23,7 @@ libelle <- __
 fid -> __
 id -> __
 lib -> __
-date -> __
+date -> date_maj
 heure -> __
 ok -> __
 id_site -> id_site
