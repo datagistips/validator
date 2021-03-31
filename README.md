@@ -58,7 +58,7 @@ In the exploration box, only 10 unique values are displayed, but you can shuffle
 ### The data mapping file
 The data mapping file **keeps track** of your restructuration process. You can use this file in other CLI programs or scripts to restructure other pools of data programmatically.
 
-## Next features
+## Road map
 - control data types (integer, float, etc...)
 - control regexes (`^[A-Za-z\s\-\u00C0-\u00FF]+$`, etc...)
 - CLI Program
