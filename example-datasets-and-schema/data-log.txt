@@ -1,7 +1,9 @@
-Date and time : 30/03/2021 23:41:05
+Date and time : 31/03/2021 08:33:47
 ------------------------
-Input data : data-mapped.csv
-Data Schema : standard.csv
+Input data : data.csv
+Data schema : standard.csv
+Data mapping : data-mapping.csv
+Output data : data-mapped.csv
 ------------------------
 [SCHEMA]
 id_site : identifiant du site
@@ -12,16 +14,16 @@ libelle :  libellé du site
 ------------------------
 [SCHEMA <- DATA]
 id_site <- id_site
-date_maj <- date
-nb_sites <- _X_
-is_ok <- _X_
-libelle <- _X_
+date_maj <- __
+nb_sites <- __
+is_ok <- __
+libelle <- __
 ------------------------
 [DATA <- SCHEMA]
-fid -> _X_
-id -> _X_
-lib -> _X_
-date -> date_maj
-heure -> _X_
-ok -> _X_
+fid -> __
+id -> __
+lib -> __
+date -> __
+heure -> __
+ok -> __
 id_site -> id_site

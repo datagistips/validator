@@ -2,7 +2,7 @@ from,to
 fid,_fid
 id,_id
 lib,_lib
-date,date_maj
+date,_date
 heure,_heure
 ok,_ok
 id_site,id_site

@@ -47,12 +47,19 @@ def write_log(files, columns, log):
 	# Ecriture du fichier source et du standard de destination #########################
 
 	input_name = files[0]
-	standard_name = files[1]
+	output_name = files[1]
+	standard_name = files[2]
+	mapping_name = files[3]
 	
 	l = ('Input data : %s\n')%(input_name)
 	f.write(l)
-	l = ('Data Schema : %s\n')%(standard_name)
+	l = ('Data schema : %s\n')%(standard_name)
 	f.write(l)
+	l = ('Data mapping : %s\n')%(mapping_name)
+	f.write(l)
+	l = ('Output data : %s\n')%(output_name)
+	f.write(l)
+	
 	l = ("------------------------\n")
 	f.write(l)
 	
@@ -84,7 +91,7 @@ def write_log(files, columns, log):
 		if standard_field in columns_mapped:
 			lib_source_column = str(list(data.columns)[columns_mapped.index(standard_field)])
 		else:
-			lib_source_column = '_X_'
+			lib_source_column = '__'
 		l = ("%s <- %s\n")%(standard_field, lib_source_column)
 		f.write(l)
 		
@@ -94,12 +101,12 @@ def write_log(files, columns, log):
 	
 	# Data Transformation #########################
 	
-	l = ("[DATA <- SCHEMA]\n")
+	l = ("[DATA -> SCHEMA]\n")
 	f.write(l)
 	for i, elt in enumerate(list(data.columns)):
 		data_colonne = elt
 		column_mapped = columns_mapped[i]
-		l = ("%s -> %s\n")%(data_colonne, column_mapped if column_mapped is not None else '_X_')
+		l = ("%s -> %s\n")%(data_colonne, column_mapped if column_mapped is not None else '__')
 		f.write(l)
 		
 	f.close()
@@ -361,7 +368,7 @@ def clicked_rename():
 	
 	output_log = input_name_without_extension + '-log.txt'
 	output_log_name = os.path.basename(output_log)
-	write_log((output_file_name, standard_name), (standard.iloc[:,0], standard.iloc[:,1], columns_mapped), output_log)
+	write_log((input_name, output_file_name, standard_name, output_mapping_name), (standard.iloc[:,0], standard.iloc[:,1], columns_mapped), output_log)
 	
 	
 	# Messages #####################################################
