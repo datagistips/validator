@@ -30,7 +30,7 @@ Validator is a data exploration 🔍, validation ✔️ and restructuration ↔�
 
 4️⃣ **Export** the result
 
-	![](images/rename.png)
+![](images/rename.png)
 
 ## 📄 Output files
 
