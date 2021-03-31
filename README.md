@@ -51,10 +51,10 @@ There are 3 output files.
 Input data format can be either CSV, Geopackage (GPKG) or ESRI Shapefiles (SHP).
 
 ## 🔎 Details
-### Shuffle
+### 🔄 Shuffle
 In the exploration box, only 10 unique values are displayed, but you can shuffle your data to explore more unique values.
 
-### The data mapping file
+### 💻 The data mapping file
 The data mapping file **keeps track** of your restructuration process. You can use this file in other CLI programs or scripts to restructure other pools of data programmatically.
 
 ## 🚗 Road map
