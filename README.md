@@ -14,7 +14,7 @@ Validator is a data exploration 🔍, validation ✔️ and restructuration ↔�
 
 ![](images/load-data.png)
 
- **Shuffle** your data, to explore unique values.
+ **Shuffle**🔄 your data, to explore unique values.
 
 ![](images/demo-shuffle.gif)
 
