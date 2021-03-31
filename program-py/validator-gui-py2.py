@@ -148,11 +148,34 @@ def  print_data(data):
 		
 	v = '\n'.join(rows)
 	
-	txt.configure(state='normal')
-	txt.delete("1.0", "end") # Deleting before inserting
-	txt.insert(INSERT, v)
-	txt.configure(state='disabled')
-	   
+	txt1.configure(state='normal')
+	txt1.delete("1.0", "end") # Deleting before inserting
+	txt1.insert(INSERT, v)
+	txt1.configure(state='disabled')
+
+
+def  print_standard(standard):
+	'''
+	Displays schema field names and descriptions in the data schema information box
+	'''
+	
+	standard_fieldNames = standard.iloc[:,0]
+	standard_descriptions = standard.iloc[:,1]
+	
+	rows = list()
+	for i, elt in enumerate(standard_fieldNames):
+		standard_fieldName = elt
+		standard_description = standard_descriptions[i]
+		row = "%s : %s"%(standard_fieldName, standard_description)
+		rows.append(row)
+	
+	block = '\n'.join(rows)
+	
+	txt2.configure(state='normal')
+	txt2.delete("1.0", "end") # Deleting before inserting
+	txt2.insert(INSERT, block)
+	txt2.configure(state='disabled')
+    
 
 def clicked_data():
 	'''
@@ -199,7 +222,12 @@ def clicked_standard():
 
 	lbl2.config(text = standard_name)
 	
-	populate(rightframe, data, standard)
+	# We display information in the data information box
+	print_standard(standard)
+	
+	if data is not None:
+		# Populate comboboxes (list of variables in the right panel)
+		populate(rightframe, data, standard)
 	
 	
 def clicked_shuffle():
@@ -369,10 +397,10 @@ def populate(frame, data = None, standard = None):
 # Window ##################################################
 
 root = Tk()
-root.title("Validator-v.0.2")
+root.title("Validator-v.0.3")
 
 
-# Left frame ################################################
+# Data panel ################################################
 
 leftframe = Frame(root)
 leftframe.pack( side = LEFT, padx=10, pady=10)
@@ -386,15 +414,15 @@ lbl1 = Label(leftframe, text="...")
 lbl1.pack(side = TOP)
 
 # Scrolled text
-txt = ScrolledText.ScrolledText(leftframe,width=40,height=10)
-txt.pack(side = TOP)
+txt1 = ScrolledText.ScrolledText(leftframe,width=40,height=10)
+txt1.pack(side = TOP)
 
 # bouton
 btn = Button(leftframe, text="Shuffle", command=clicked_shuffle)
 btn.pack(side = TOP)
 	
 
-# Right Frame #################################################################
+# Standard panel #################################################################
 
 rightframe = Frame(root, padx=10, pady=10)
 rightframe.pack(side = LEFT)
@@ -409,6 +437,13 @@ btn.pack(side = TOP)
 # Textes
 lbl2 = Label(rightframe1, text="...")
 lbl2.pack(side = TOP)
+
+# Scrolled text
+txt2 = ScrolledText.ScrolledText(rightframe1,width=40,height=10)
+txt2.pack(side = TOP)
+
+
+# Matching panel ####################################################################
 
 rightframe2 = Frame(rightframe)
 rightframe2.pack(side = TOP)

@@ -1,4 +1,4 @@
-Date and time : 31/03/2021 08:33:47
+Date and time : 31/03/2021 19:28:55
 ------------------------
 Input data : data.csv
 Data schema : standard.csv
@@ -19,7 +19,7 @@ nb_sites <- __
 is_ok <- __
 libelle <- __
 ------------------------
-[DATA <- SCHEMA]
+[DATA -> SCHEMA]
 fid -> __
 id -> __
 lib -> __
