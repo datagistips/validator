@@ -19,7 +19,7 @@ Validator is a data exploration 🔍, validation ✔️ and restructuration ↔�
 
 	![](images/demo-shuffle.gif)
 
-- Load your **schema** (first column of the CSV must define the field name)
+- Load your **schema** (where first column of the CSV defines the field name)
 
 	![](images/standard.png)
 
