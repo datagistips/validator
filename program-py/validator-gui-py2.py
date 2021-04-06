@@ -49,18 +49,26 @@ def write_log(files, columns, log):
 
 	# Ecriture du fichier source et du standard de destination #########################
 
-	input_name = files[0]
-	output_name = files[1]
-	standard_name = files[2]
-	mapping_name = files[3]
+	input_file = files[0]
+	output_file = files[1]
+	standard_file = files[2]
+	output_mapping = files[3]
 	
-	l = ('Input data : %s\n')%(input_name)
+	l = ('Input data : %s\n')%(os.path.basename(input_file))
 	f.write(l)
-	l = ('Data schema : %s\n')%(standard_name)
+	l = ('Input data Path : %s\n')%(input_file)
 	f.write(l)
-	l = ('Data mapping : %s\n')%(mapping_name)
+	l = ('Data schema : %s\n')%(os.path.basename(standard_file))
 	f.write(l)
-	l = ('Output data : %s\n')%(output_name)
+	l = ('Data schema Path : %s\n')%(standard_file)
+	f.write(l)
+	l = ('Data mapping : %s\n')%(os.path.basename(output_mapping))
+	f.write(l)
+	l = ('Data mapping Path : %s\n')%(output_mapping)
+	f.write(l)
+	l = ('Output data : %s\n')%(os.path.basename(output_file))
+	f.write(l)
+	l = ('Output data Path : %s\n')%(output_file)
 	f.write(l)
 	
 	l = ("------------------------\n")
@@ -213,11 +221,11 @@ def clicked_standard():
 	When we click on standard, we populate the mapping box
 	'''
 
-	global standard, standard_name
+	global standard, standard_name, standard_file
 	
 	file = tkFileDialog.askopenfilename(initialdir= path.dirname(__file__), filetypes=[("CSV delimited files", ".csv")])
-	input_file = file
-	standard  = pd.read_csv(file)
+	standard_file = file
+	standard  = pd.read_csv(standard_file)
 	standard_name = os.path.basename(input_file)
 
 	lbl2.config(text = standard_name)
@@ -336,7 +344,7 @@ def clicked_rename():
 	
 	output_log = input_name_without_extension + '-log.txt'
 	output_log_name = os.path.basename(output_log)
-	write_log((input_name, output_file_name, standard_name, output_mapping_name), (standard.iloc[:,0], standard.iloc[:,1], columns_mapped), output_log)
+	write_log((input_file, output_file, standard_file, output_mapping), (standard.iloc[:,0], standard.iloc[:,1], columns_mapped), output_log)
 	
 	
 	# Messages #####################################################

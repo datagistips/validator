@@ -1,9 +1,13 @@
-Date and time : 31/03/2021 19:34:28
+Date and time : 06/04/2021 22:04:14
 ------------------------
 Input data : data.csv
+Input data Path : C:/Users/mathieu/Desktop/datagistips/geo-hack/2103-validator/github/validator/example-datasets-and-schema/data.csv
 Data schema : standard.csv
+Data schema Path : C:/Users/mathieu/Desktop/datagistips/geo-hack/2103-validator/github/validator/example-datasets-and-schema/standard.csv
 Data mapping : data-mapping.csv
+Data mapping Path : C:/Users/mathieu/Desktop/datagistips/geo-hack/2103-validator/github/validator/example-datasets-and-schema/data-mapping.csv
 Output data : data-mapped.csv
+Output data Path : C:/Users/mathieu/Desktop/datagistips/geo-hack/2103-validator/github/validator/example-datasets-and-schema/data-mapped.csv
 ------------------------
 [SCHEMA]
 id_site : identifiant du site
@@ -14,7 +18,7 @@ libelle :  libellé du site
 ------------------------
 [SCHEMA <- DATA]
 id_site <- id_site
-date_maj <- date
+date_maj <- __
 nb_sites <- __
 is_ok <- __
 libelle <- __
@@ -23,7 +27,7 @@ libelle <- __
 fid -> __
 id -> __
 lib -> __
-date -> date_maj
+date -> __
 heure -> __
 ok -> __
 id_site -> id_site
