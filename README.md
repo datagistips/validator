@@ -64,8 +64,8 @@ The data mapping file **keeps track** of your restructuration process. You can u
 
 ## Author & Licence
 - Mathieu Rajerison
-- Current version : v-0.2 [(check CHANGELOG for version details)](CHANGELOG.md)
-- Date : 30th of March 2021
+- Current version : v-0.3 [(check CHANGELOG for version details)](CHANGELOG.md)
+- Creation date : 30th of March 2021
 - Licence : Affero-GPL
 
 
