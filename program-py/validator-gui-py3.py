@@ -251,8 +251,8 @@ def clicked_data():
 	file = filedialog.askopenfilename(initialdir= path.dirname(__file__), filetypes=[("", ".csv .gpkg .shp")])
 	input_file = file
 	input_name = os.path.basename(input_file)
-	input_name_without_extension = re.search('(.*)\\.(.*)', file).group(1)
-	input_name_extension = re.search('(.*)\\.(.*)', file).group(2)    
+	input_name_without_extension = re.search('(.*)\\.(.*)', input_file).group(1)
+	input_name_extension = re.search('(.*)\\.(.*)', input_file).group(2)    
     
 	data = gpd.read_file(input_file, encoding = "utf-8")
 	
