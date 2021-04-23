@@ -18,10 +18,12 @@ from datetime import datetime
 
 # GLOBAL VARIABLES
 global data, standard, input_file, columns_mapped, is_populated
+
 data = None
 standard = None
 input_file = None
 is_populated = False
+
 
 def control_date(date_text):
     try:
@@ -421,7 +423,171 @@ def get_type_of_var_in_standard(standard, the_var):
 
     res = standard[standard["name"] == the_var]["type"].item()
     return res
-    
+ 
+def is_ok_character(data_var):
+	if data_var.dtype == "object":
+		return True
+	else:
+		return False
+        
+def is_ok_integer(data_var):
+	if data_var.dtype == "int64":
+		return True
+	elif data_var.dtype == "float64":
+		return (False, "Float type found", None)
+	elif data_var.dtype == "object":
+		v = [bool(re.match("\d", str(elt))) for elt in list(data_var)]
+		i_not_valid = [i for i, elt in enumerate(v) if elt is False]
+		if len(i_not_valid) > 0:
+			elts_not_valid = [list(data_var)[i] for i in i_not_valid]
+			return (False, "String character(s) found", elts_not_valid[1:5])
+		else:
+			return True
+	else:
+		return False
+	
+def is_ok_float(data_var):
+	if data_var.dtype == "float64":
+		return True
+	elif data_var.dtype == "int64":
+		return (True, "Integer type found", None)
+	elif data_var.dtype == "object":
+		v = [bool(re.match("(\d+\.?\d+)|(\d+\,?\d+)", str(elt))) for elt in data_var]
+		i_not_valid = [i for i, elt in enumerate(v) if elt is False]
+		if len(i_not_valid) > 0:
+			v = [
+			bool(re.match("(\d+\.?\d?)|(\d+\,?\d?)", str(elt))) for elt in data_var
+			]
+			i_not_valid = [i for i, elt in enumerate(v) if elt is False]
+			if len(i_not_valid) > 0:
+				elts_not_valid = [list(data_var)[i] for i in i_not_valid]
+				return (False, "No float types found", elts_not_valid[1:5])
+			else:
+				return (True, "Integer type found", None)
+		else:
+			return True
+	else:
+		return False
+	
+def is_ok_boolean(data_var):
+	if data_var.dtype == "bool":
+		return True
+	elif data_var.dtype == "int64":
+		unique_values = list(set(data_var))
+		if unique_values == [0, 1] or unique_values in (0, 1):
+			return True
+		else:
+			return (
+				False,
+				"One or more integer values not equal to 0 or 1",
+				unique_values[1:5],
+			)
+	elif data_var.dtype == "object":
+
+		data_var = data_var.astype("str")
+
+		# Boolean valid values
+		ref_bool1 = [["0", "1"], ["O"], ["1"]]
+		ref_bool2 = [["FALSE", "TRUE"], ["TRUE"], ["FALSE"]]
+		ref_bool3 = [["False", "True"], ["True"], ["False"]]
+
+		# Unique values
+		unique_values = sorted(list(set(data_var)))
+		if (
+			unique_values in ref_bool1
+			or unique_values in ref_bool2
+			or unique_values in ref_bool3
+		):
+			return True
+		elif all(
+			[
+				elt in ["0", "1", "TRUE", "FALSE", "True", "False"]
+				for elt in unique_values
+			]
+		):
+			return (
+				False,
+				"Mix of boolean values, for instance TRUE, True, 0 and FALSE at the same time",
+				None,
+			)
+		else:
+			return (False, "Wrong values", None)
+	else:
+		return False
+
+	
+def is_ok_date(data_var):
+	if data_var.dtype == "datetime64":
+		return True
+	elif data_var.dtype == "object":
+
+		if all([control_date(elt) is not None for elt in data_var]):
+			return True
+		elif all([control_date_alt1(elt) is not None for elt in data_var]):
+			return (
+				False,
+				"Day, month and year in wrong order. Follow ISO-8601 : apply 2021-04-01",
+				None,
+			)
+		elif all([control_date_alt2(elt) is not None for elt in data_var]):
+			return (
+				False,
+				"Years too short. Follow ISO-8601 : apply 2021-04-01",
+				None,
+			)
+		elif all(
+			[bool(re.match("[0-9]+-[0-9]+-[0-9]+", elt)) is True for elt in data_var]
+		):
+			return (False, "Day(s) not in range", None)
+		elif all(
+			[bool(re.match("[0-9]+/[0-9]+/[0-9]+", elt)) is True for elt in data_var]
+		):
+			return (
+				False,
+				"Not well formatted. Follow ISO-8601 : apply 2021-04-01",
+				None,
+			)
+		else:
+			return (
+				False,
+				"Dates not valid. Follow ISO-8601 : apply 2021-04-01",
+				None,
+			)
+
+
+def is_ok_datetime(data_var):
+	if data_var.dtype == "datetime64":
+		return True
+	elif data_var.dtype == "object":
+		elts_not_valid = [
+			elt
+			for elt in [control_datetime(elt) for elt in data_var]
+			if elt is None
+		]
+		n_not_valid = len(elts_not_valid)
+		if n_not_valid > 0:
+			return (False, "Wrong datetime", None)
+		else:
+			return True
+	else:
+		return False
+
+def is_ok_duration(data_var):
+	if data_var.dtype == "datetime64":
+		return True
+	elif data_var.dtype == "object":
+		elts_not_valid = [
+			elt for elt in [control_time(elt) for elt in data_var] if elt is None
+		]
+		n_not_valid = len(elts_not_valid)
+		if n_not_valid > 0:
+			return (False, "Wrong time", None)
+		else:
+			return True
+	else:
+		return False
+
+
 def is_ok(data_var, to_type):
     """
     > data_var
@@ -437,166 +603,25 @@ def is_ok(data_var, to_type):
     """
 
     if to_type in ("character", "text", "string"):
-        if data_var.dtype == "object":
-            return True
-        else:
-            return False
+        is_ok_character(data_var)
 
     elif to_type == "integer":
-        if data_var.dtype == "int64":
-            return True
-        elif data_var.dtype == "float64":
-            return (False, "Float type found", None)
-        elif data_var.dtype == "object":
-            v = [bool(re.match("\d", str(elt))) for elt in list(data_var)]
-            i_not_valid = [i for i, elt in enumerate(v) if elt is False]
-            if len(i_not_valid) > 0:
-                elts_not_valid = [list(data_var)[i] for i in i_not_valid]
-                return (False, "String character(s) found", elts_not_valid[1:5])
-            else:
-                return True
-        else:
-            return False
+        is_ok_integer(data_var)
 
     elif to_type in ("float", "number"):
-        if data_var.dtype == "float64":
-            return True
-        elif data_var.dtype == "int64":
-            return (True, "Integer type found", None)
-        elif data_var.dtype == "object":
-            v = [bool(re.match("(\d+\.?\d+)|(\d+\,?\d+)", str(elt))) for elt in data_var]
-            i_not_valid = [i for i, elt in enumerate(v) if elt is False]
-            if len(i_not_valid) > 0:
-                v = [
-                    bool(re.match("(\d+\.?\d?)|(\d+\,?\d?)", str(elt))) for elt in data_var
-                ]
-                i_not_valid = [i for i, elt in enumerate(v) if elt is False]
-                if len(i_not_valid) > 0:
-                    elts_not_valid = [list(data_var)[i] for i in i_not_valid]
-                    return (False, "No float types found", elts_not_valid[1:5])
-                else:
-                    return (True, "Integer type found", None)
-            else:
-                return True
-        else:
-            return False
+        is_ok_float(data_var)
 
     elif to_type == "boolean":
-        if data_var.dtype == "bool":
-            return True
-        elif data_var.dtype == "int64":
-            unique_values = list(set(data_var))
-            if unique_values == [0, 1] or unique_values in (0, 1):
-                return True
-            else:
-                return (
-                    False,
-                    "One or more integer values not equal to 0 or 1",
-                    unique_values[1:5],
-                )
-        elif data_var.dtype == "object":
-
-            data_var = data_var.astype("str")
-
-            # Boolean valid values
-            ref_bool1 = [["0", "1"], ["O"], ["1"]]
-            ref_bool2 = [["FALSE", "TRUE"], ["TRUE"], ["FALSE"]]
-            ref_bool3 = [["False", "True"], ["True"], ["False"]]
-
-            # Unique values
-            unique_values = sorted(list(set(data_var)))
-            if (
-                unique_values in ref_bool1
-                or unique_values in ref_bool2
-                or unique_values in ref_bool3
-            ):
-                return True
-            elif all(
-                [
-                    elt in ["0", "1", "TRUE", "FALSE", "True", "False"]
-                    for elt in unique_values
-                ]
-            ):
-                return (
-                    False,
-                    "Mix of boolean values, for instance TRUE, True, 0 and FALSE at the same time",
-                    None,
-                )
-            else:
-                return (False, "Wrong values", None)
-        else:
-            return False
-
+	    is_ok_boolean(data_var)
+		
     elif to_type == "date":
-        if data_var.dtype == "datetime64":
-            return True
-        elif data_var.dtype == "object":
-
-            if all([control_date(elt) is not None for elt in data_var]):
-                return True
-            elif all([control_date_alt1(elt) is not None for elt in data_var]):
-                return (
-                    False,
-                    "Day, month and year in wrong order. Follow ISO-8601 : apply 2021-04-01",
-                    None,
-                )
-            elif all([control_date_alt2(elt) is not None for elt in data_var]):
-                return (
-                    False,
-                    "Years too short. Follow ISO-8601 : apply 2021-04-01",
-                    None,
-                )
-            elif all(
-                [bool(re.match("[0-9]+-[0-9]+-[0-9]+", elt)) is True for elt in data_var]
-            ):
-                return (False, "Day(s) not in range", None)
-            elif all(
-                [bool(re.match("[0-9]+/[0-9]+/[0-9]+", elt)) is True for elt in data_var]
-            ):
-                return (
-                    False,
-                    "Not well formatted. Follow ISO-8601 : apply 2021-04-01",
-                    None,
-                )
-            else:
-                return (
-                    False,
-                    "Dates not valid. Follow ISO-8601 : apply 2021-04-01",
-                    None,
-                )
-
+        is_ok_date(data_var)
+        
     elif to_type == "datetime":
-        if data_var.dtype == "datetime64":
-            return True
-        elif data_var.dtype == "object":
-            elts_not_valid = [
-                elt
-                for elt in [control_datetime(elt) for elt in data_var]
-                if elt is None
-            ]
-            n_not_valid = len(elts_not_valid)
-            if n_not_valid > 0:
-                return (False, "Wrong datetime", None)
-            else:
-                return True
-        else:
-            return False
+        is_ok_datetime(data_var)
 
     elif to_type == "duration":
-        if data_var.dtype == "datetime64":
-            return True
-        elif data_var.dtype == "object":
-            elts_not_valid = [
-                elt for elt in [control_time(elt) for elt in data_var] if elt is None
-            ]
-            n_not_valid = len(elts_not_valid)
-            if n_not_valid > 0:
-                return (False, "Wrong time", None)
-            else:
-                return True
-        else:
-            return False
-
+	    is_ok_duration(data_var)
 
 def read_data(input_data):
 
