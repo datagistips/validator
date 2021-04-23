@@ -137,7 +137,7 @@ def populate_source_target(frame, data = None, standard = None):
 	
 	# Block with combo boxes
 	# correspond to standard values
-	global combos, labels
+	global combos, labels, labels_control
 	
 	# Remove elements from the populated panel
 	if is_populated is True :
@@ -149,6 +149,7 @@ def populate_source_target(frame, data = None, standard = None):
 	data_colonnes = list(data.columns)
 	combos = list()
 	labels = list()
+	labels_control = list()
 	for row, elt in enumerate(data_colonnes):
 		if elt != 'geometry': # we don't allow renaming of geometry columns, when data is spatial (gpkg or shp)
 			
@@ -180,7 +181,7 @@ def populate_source_target(frame, data = None, standard = None):
 				# 3 - Labels for controlling
 				label_control = Label(rightframe, text="Press 'Check'", bg='white')
 				label_control.grid(row=row, column=2)
-				labels.append(label_control)
+				labels_control.append(label_control)
 			
 		is_populated = True
 
@@ -369,21 +370,256 @@ def is_ok_destination_columns():
 	else:
 		return(True)
 
+def get_type_of_var_in_standard(standard, the_var):
+    """
+    >>> get_type_of_var(standard, "id_site")
+    'integer'
+    """
+
+    res = standard[standard["name"] == the_var]["type"].item()
+    return res
     
+def is_ok(data_var, to_type):
+    """
+    > data_var
+    0    a
+    1    b
+    2    c
+    Name: str, dtype: object
+
+    > to_type
+    character
+
+    >> True
+    """
+
+    # ~ print("----")
+    # ~ print(data_var)
+    print("> to_type", to_type)
+    print("> type d'origine : ", data_var.dtype)
+    # ~ print("> type de destination : ", to_type)
+
+    if to_type in ("character", "text", "string"):
+        if data_var.dtype == "object":
+            return True
+        else:
+            return False
+
+    elif to_type == "integer":
+        if data_var.dtype == "int64":
+            return True
+        elif data_var.dtype == "float64":
+            return (False, "Float type found", None)
+        elif data_var.dtype == "object":
+            v = [bool(match("\d", str(elt))) for elt in list(data_var)]
+            i_not_valid = [i for i, elt in enumerate(v) if elt is False]
+            if len(i_not_valid) > 0:
+                elts_not_valid = [list(data_var)[i] for i in i_not_valid]
+                return (False, "String character(s) found", elts_not_valid[1:5])
+            else:
+                return True
+        else:
+            return False
+
+    elif to_type in ("float", "number"):
+        if data_var.dtype == "float64":
+            return True
+        elif data_var.dtype == "int64":
+            return (True, "Integer type found", None)
+        elif data_var.dtype == "object":
+            v = [bool(match("(\d+\.?\d+)|(\d+\,?\d+)", str(elt))) for elt in data_var]
+            i_not_valid = [i for i, elt in enumerate(v) if elt is False]
+            if len(i_not_valid) > 0:
+                v = [
+                    bool(match("(\d+\.?\d?)|(\d+\,?\d?)", str(elt))) for elt in data_var
+                ]
+                i_not_valid = [i for i, elt in enumerate(v) if elt is False]
+                if len(i_not_valid) > 0:
+                    elts_not_valid = [list(data_var)[i] for i in i_not_valid]
+                    return (False, "No float types found", elts_not_valid[1:5])
+                else:
+                    return (True, "Integer type found", None)
+            else:
+                return True
+        else:
+            return False
+
+    elif to_type == "boolean":
+        if data_var.dtype == "bool":
+            return True
+        elif data_var.dtype == "int64":
+            unique_values = list(set(data_var))
+            if unique_values == [0, 1] or unique_values in (0, 1):
+                return True
+            else:
+                return (
+                    False,
+                    "One or more integer values not equal to 0 or 1",
+                    unique_values[1:5],
+                )
+        elif data_var.dtype == "object":
+
+            data_var = data_var.astype("str")
+
+            # Boolean valid values
+            ref_bool1 = [["0", "1"], ["O"], ["1"]]
+            ref_bool2 = [["FALSE", "TRUE"], ["TRUE"], ["FALSE"]]
+            ref_bool3 = [["False", "True"], ["True"], ["False"]]
+
+            # Unique values
+            unique_values = sorted(list(set(data_var)))
+            if (
+                unique_values in ref_bool1
+                or unique_values in ref_bool2
+                or unique_values in ref_bool3
+            ):
+                return True
+            elif all(
+                [
+                    elt in ["0", "1", "TRUE", "FALSE", "True", "False"]
+                    for elt in unique_values
+                ]
+            ):
+                return (
+                    False,
+                    "Mix of boolean values, for instance TRUE, True, 0 and FALSE at the same time",
+                    None,
+                )
+            else:
+                return (False, "Wrong values", None)
+        else:
+            return False
+
+    elif to_type == "date":
+        if data_var.dtype == "datetime64":
+            return True
+        elif data_var.dtype == "object":
+
+            if all([control_date(elt) is not None for elt in data_var]):
+                return True
+            elif all([control_date_alt1(elt) is not None for elt in data_var]):
+                return (
+                    False,
+                    "Day, month and year in wrong order. Follow ISO-8601 : apply 2021-04-01",
+                    None,
+                )
+            elif all([control_date_alt2(elt) is not None for elt in data_var]):
+                return (
+                    False,
+                    "Years too short. Follow ISO-8601 : apply 2021-04-01",
+                    None,
+                )
+            elif all(
+                [bool(match("[0-9]+-[0-9]+-[0-9]+", elt)) is True for elt in data_var]
+            ):
+                return (False, "Day(s) not in range", None)
+            elif all(
+                [bool(match("[0-9]+/[0-9]+/[0-9]+", elt)) is True for elt in data_var]
+            ):
+                return (
+                    False,
+                    "Not well formatted. Follow ISO-8601 : apply 2021-04-01",
+                    None,
+                )
+            else:
+                return (
+                    False,
+                    "Dates not valid. Follow ISO-8601 : apply 2021-04-01",
+                    None,
+                )
+
+    elif to_type == "datetime":
+        if data_var.dtype == "datetime64":
+            return True
+        elif data_var.dtype == "object":
+            elts_not_valid = [
+                elt
+                for elt in [control_datetime(elt) for elt in data_var]
+                if elt is None
+            ]
+            n_not_valid = len(elts_not_valid)
+            if n_not_valid > 0:
+                return (False, "Wrong datetime", None)
+            else:
+                return True
+        else:
+            return False
+
+    elif to_type == "duration":
+        if data_var.dtype == "datetime64":
+            return True
+        elif data_var.dtype == "object":
+            elts_not_valid = [
+                elt for elt in [control_time(elt) for elt in data_var] if elt is None
+            ]
+            n_not_valid = len(elts_not_valid)
+            if n_not_valid > 0:
+                return (False, "Wrong time", None)
+            else:
+                return True
+        else:
+            return False
+
+
+def read_data(input_data):
+
+    # !! https://docs.python.org/3/howto/regex.html#non-capturing-and-named-groups
+    input_extension = pathlib.Path(input_data).suffix
+
+    if input_extension == ".csv":
+        file_class = "df"
+        data = pd.read_csv(input_data, encoding="utf-8")
+    else:
+        file_class = "geo"
+        data = gpd.read_file(input_data, encoding="utf-8")
+
+    return data
+
+        
 def clicked_check():
 	'''
 	On click on 'Check'
 	'''
 	
+	# Source & Target
 	d = get_source_target(data)
-	print(d)
 	
-	for from_col, to_col in d.items():
-		print(from_col, to_col)
+	from_cols = list(d.keys())
+	to_cols = list(d.values())
+	
+	# Remove previous values
+	if is_populated is True :
+		for elt in labels_control:
+			elt.destroy()
+	
+	# Change values
+	n = len(from_cols)
+	for i in range(n):
 		
-		# Is type correct
+		from_col = from_cols[i]
+		to_col = to_cols[i]
 		
-		# if type is not correct, set color of label red, if not green
+		# Ok or not Ok ?
+		if to_col == '_%s'%from_col:
+			ok = True
+		else:
+			target_type = get_type_of_var_in_standard(standard, to_col)
+			
+			# Is type correct
+			data_var = data[from_col]
+			ok = is_ok(data_var, target_type)
+		
+		# Set text
+		if ok:
+			combo_text = 'OK'
+			combo_color = 'white'
+		else:
+			combo_text = 'NOT OK'
+			combo_color = 'red'
+		
+		label_control = Label(rightframe, text=combo_text, bg='white', color = combo_color)
+		label_control.grid(row=i, column=2)
+		labels_control.append(label_control)
 	
 	
 def clicked_rename():
