@@ -1,13 +1,13 @@
-Date and time : 09/04/2021 21:42:19
+Date and time : 23/04/2021 15:23:42
 ------------------------
 Input data : data.gpkg
-Input data Path : C:/Users/mathieu/Desktop/datagistips/geo-hack/2103-validator/github/validator/example-datasets-and-schema/data.gpkg
+Input data Path : C:/Users/mathieu.rajerison/Desktop/TAFF_MAISON/A_WKSP/191127_FRICHES/gitlab/validator/example-datasets-and-schema/data.gpkg
 Data schema : standard.csv
-Data schema Path : C:/Users/mathieu/Desktop/datagistips/geo-hack/2103-validator/github/validator/example-datasets-and-schema/standard.csv
+Data schema Path : C:/Users/mathieu.rajerison/Desktop/TAFF_MAISON/A_WKSP/191127_FRICHES/gitlab/validator/example-datasets-and-schema/standard.csv
 Data mapping : data-mapping.csv
-Data mapping Path : C:/Users/mathieu/Desktop/datagistips/geo-hack/2103-validator/github/validator/example-datasets-and-schema/data-mapping.csv
+Data mapping Path : C:/Users/mathieu.rajerison/Desktop/TAFF_MAISON/A_WKSP/191127_FRICHES/gitlab/validator/example-datasets-and-schema/data-mapping.csv
 Output data : data-mapped.gpkg
-Output data Path : C:/Users/mathieu/Desktop/datagistips/geo-hack/2103-validator/github/validator/example-datasets-and-schema/data-mapped.gpkg
+Output data Path : C:/Users/mathieu.rajerison/Desktop/TAFF_MAISON/A_WKSP/191127_FRICHES/gitlab/validator/example-datasets-and-schema/data-mapped.gpkg
 ------------------------
 [SCHEMA]
 id_site : identifiant du site

@@ -224,12 +224,16 @@ def  print_standard(standard):
 	
 	standard_fieldNames = standard.iloc[:,0]
 	standard_descriptions = standard.iloc[:,1]
+	standard_types = standard.iloc[:,2]
+	# ~ standard_pattern = standard.iloc[:,3]
 	
 	rows = list()
 	for i, elt in enumerate(standard_fieldNames):
 		standard_fieldName = elt
 		standard_description = standard_descriptions[i]
-		row = "%s : %s"%(standard_fieldName, standard_description)
+		standard_type = standard_types[i]
+		# ~ standard_patterns = standard_patterns[i]
+		row = "%s : %s (%s)"%(standard_fieldName, standard_description, standard_type)
 		rows.append(row)
 	
 	block = '\n'.join(rows)
@@ -314,7 +318,7 @@ def get_columns_mapped():
 	return(columns_mapped)
 
 
-def get_mapping_file(data):
+def get_source_target(data):
 	'''
 	We wuild the mapping file
 	This file (with suffix -mapping.csb specifies the source and target columns
@@ -337,7 +341,7 @@ def get_mapping_file(data):
 
 def get_renamed_data(data):
 	
-	d = get_mapping_file(data)
+	d = get_source_target(data)
 	data2 = data.rename(index=str, columns=d)
 	return(data2)
 	
@@ -358,7 +362,18 @@ def is_ok_destination_columns():
 	else:
 		return(True)
     
-
+def clicked_check():
+	'''
+	On click on 'Check'
+	'''
+	
+	d = get_source_target(data)
+	print(d)
+	
+	for from_col, to_col in d.items():
+		print(from_col, to_col)
+	
+	
 def clicked_rename():
 	'''
 	Renaming is the final operation
@@ -390,7 +405,7 @@ def clicked_rename():
 		data2.to_csv(output_file, index = False, encoding='utf-8')
 	
 	# Export data mapping file
-	d = get_mapping_file(data)
+	d = get_source_target(data)
 	df = pd.DataFrame(data = {'from':d.keys(), 'to':d.values()})
 	output_mapping_name = input_name_without_extension + '-mapping'
 	output_mapping = output_mapping_name + '.csv'
@@ -488,6 +503,9 @@ renameframe = Frame(root)
 renameframe.pack( side = LEFT, padx=10, pady=10)
 
 renamebutton = Button(renameframe, text="Rename", fg="black", command=clicked_rename)
-renamebutton.pack( side = LEFT)
+renamebutton.pack( side = TOP)
+
+checkbutton = Button(renameframe, text="Check", fg="black", command=clicked_check)
+checkbutton.pack( side = TOP, pady = 10)
 
 root.mainloop()
