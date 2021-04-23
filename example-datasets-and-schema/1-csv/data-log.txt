@@ -1,0 +1,58 @@
+Date and time : 23/04/2021 16:45:05
+------------------------
+Input data : data.csv
+Input data Path : C:/Users/mathieu.rajerison/Desktop/TAFF_MAISON/A_WKSP/191127_FRICHES/gitlab/validator/example-datasets-and-schema/1-csv/data.csv
+Data schema : schema.csv
+Data schema Path : C:/Users/mathieu.rajerison/Desktop/TAFF_MAISON/A_WKSP/191127_FRICHES/gitlab/validator/example-datasets-and-schema/1-csv/schema.csv
+Data mapping : data-mapping.csv
+Data mapping Path : C:/Users/mathieu.rajerison/Desktop/TAFF_MAISON/A_WKSP/191127_FRICHES/gitlab/validator/example-datasets-and-schema/1-csv/data-mapping.csv
+Output data : data-mapped.csv
+Output data Path : C:/Users/mathieu.rajerison/Desktop/TAFF_MAISON/A_WKSP/191127_FRICHES/gitlab/validator/example-datasets-and-schema/1-csv/data-mapped.csv
+------------------------
+[SCHEMA]
+id_site : Site id.
+pattern : Site pattern
+list_values : Field with a list of values
+foo3 : variable
+foo2 : variable
+date1 : date
+date2 : date
+date3 : date
+ok1 : is ok ?
+ok2 : is ok ?
+ok3 : is ok ?
+ok4 : is ok ?
+insee1 : City code
+siret1 : Enterprise code
+------------------------
+[SCHEMA <- DATA]
+id_site <- id_site
+pattern <- pattern
+list_values <- list_values
+foo3 <- __
+foo2 <- foo2
+date1 <- date1
+date2 <- date2
+date3 <- date3
+ok1 <- ok1
+ok2 <- ok2
+ok3 <- ok3
+ok4 <- ok4
+insee1 <- insee1
+siret1 <- siret1
+------------------------
+[DATA -> SCHEMA]
+id_site -> id_site
+foo1 -> __
+foo2 -> foo2
+pattern -> pattern
+list_values -> list_values
+date1 -> date1
+date2 -> date2
+date3 -> date3
+ok1 -> ok1
+ok2 -> ok2
+ok3 -> ok3
+ok4 -> ok4
+insee1 -> insee1
+siret1 -> siret1

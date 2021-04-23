@@ -5,13 +5,12 @@ import geopandas as gpd
 import pandas as pd
 
 # GUI
-from tkinter import *
-from tkinter import scrolledtext, filedialog, ttk, messagebox
+import tkinter as tk
+from tkinter import scrolledtext, filedialog, ttk, messagebox, Button, Label, Scrollbar, Frame, Canvas
 
 # BASIC
-from os import path
 import math
-from re import search, match
+import re
 import os
 import sys
 import random
@@ -223,7 +222,7 @@ def populate_source_target(frame, data = None, standard = None):
 				combos.append(combo) # we add the combo to the list of combos. combos will help when renaming data
 				
 				# 3 - Labels for controlling
-				label_control = Label(rightframe, text="Press 'Check'", bg='white')
+				label_control = Label(rightframe, text="Press 'Check' to control the type", bg='white')
 				label_control.grid(row=row, column=2)
 				labels_control.append(label_control)
 			
@@ -265,7 +264,7 @@ def  print_data(data):
 	
 	txt1.configure(state='normal')
 	txt1.delete("1.0", "end") # Deleting before inserting
-	txt1.insert(INSERT, v)
+	txt1.insert(tk.INSERT, v)
 	txt1.configure(state='disabled')
 	
 
@@ -292,7 +291,7 @@ def  populate_standard(standard):
 	
 	txt2.configure(state='normal')
 	txt2.delete("1.0", "end") # Deleting before inserting
-	txt2.insert(INSERT, block)
+	txt2.insert(tk.INSERT, block)
 	txt2.configure(state='disabled')
 	
 
@@ -305,11 +304,11 @@ def clicked_data():
 	global data, data_columns, input_file, input_name, input_name_without_extension, input_name_extension
 	
 	# Dialog
-	file = filedialog.askopenfilename(initialdir= path.dirname(__file__), filetypes=[("", ".csv .gpkg .shp")])
+	file = filedialog.askopenfilename(initialdir= os.path.dirname(__file__), filetypes=[("", ".csv .gpkg .shp")])
 	input_file = file
 	input_name = os.path.basename(input_file)
-	input_name_without_extension = search('(.*)\\.(.*)', input_file).group(1)
-	input_name_extension = search('(.*)\\.(.*)', input_file).group(2)    
+	input_name_without_extension = re.search('(.*)\\.(.*)', input_file).group(1)
+	input_name_extension = re.search('(.*)\\.(.*)', input_file).group(2)    
     
 	data = gpd.read_file(input_file, encoding = "utf-8")
 	
@@ -334,7 +333,7 @@ def clicked_standard():
 
 	global standard, standard_name, standard_file
 	
-	file = filedialog.askopenfilename(initialdir= path.dirname(__file__), filetypes=[("CSV delimited files", ".csv")])
+	file = filedialog.askopenfilename(initialdir= os.path.dirname(__file__), filetypes=[("CSV delimited files", ".csv")])
 	standard_file = file
 	standard_name = os.path.basename(standard_file)
 	standard  = pd.read_csv(standard_file, encoding = "iso-8859-1")
@@ -449,7 +448,7 @@ def is_ok(data_var, to_type):
         elif data_var.dtype == "float64":
             return (False, "Float type found", None)
         elif data_var.dtype == "object":
-            v = [bool(match("\d", str(elt))) for elt in list(data_var)]
+            v = [bool(re.match("\d", str(elt))) for elt in list(data_var)]
             i_not_valid = [i for i, elt in enumerate(v) if elt is False]
             if len(i_not_valid) > 0:
                 elts_not_valid = [list(data_var)[i] for i in i_not_valid]
@@ -465,11 +464,11 @@ def is_ok(data_var, to_type):
         elif data_var.dtype == "int64":
             return (True, "Integer type found", None)
         elif data_var.dtype == "object":
-            v = [bool(match("(\d+\.?\d+)|(\d+\,?\d+)", str(elt))) for elt in data_var]
+            v = [bool(re.match("(\d+\.?\d+)|(\d+\,?\d+)", str(elt))) for elt in data_var]
             i_not_valid = [i for i, elt in enumerate(v) if elt is False]
             if len(i_not_valid) > 0:
                 v = [
-                    bool(match("(\d+\.?\d?)|(\d+\,?\d?)", str(elt))) for elt in data_var
+                    bool(re.match("(\d+\.?\d?)|(\d+\,?\d?)", str(elt))) for elt in data_var
                 ]
                 i_not_valid = [i for i, elt in enumerate(v) if elt is False]
                 if len(i_not_valid) > 0:
@@ -548,11 +547,11 @@ def is_ok(data_var, to_type):
                     None,
                 )
             elif all(
-                [bool(match("[0-9]+-[0-9]+-[0-9]+", elt)) is True for elt in data_var]
+                [bool(re.match("[0-9]+-[0-9]+-[0-9]+", elt)) is True for elt in data_var]
             ):
                 return (False, "Day(s) not in range", None)
             elif all(
-                [bool(match("[0-9]+/[0-9]+/[0-9]+", elt)) is True for elt in data_var]
+                [bool(re.match("[0-9]+/[0-9]+/[0-9]+", elt)) is True for elt in data_var]
             ):
                 return (
                     False,
@@ -718,57 +717,57 @@ def clicked_rename():
 
 # Window ##################################################
 
-root = Tk()
+root = tk.Tk()
 root.title("Validator-v0.4")
 
 
 # Data panel ################################################
 
 leftframe = Frame(root)
-leftframe.pack( side = LEFT, padx=10, pady=10)
+leftframe.pack( side = tk.LEFT, padx=10, pady=10)
 
 # bouton
 btn = Button(leftframe, text="Data", command=clicked_data)
-btn.pack(side = TOP)
+btn.pack(side = tk.TOP)
 
 # Textes
 lbl1 = Label(leftframe, text="...")
-lbl1.pack(side = TOP)
+lbl1.pack(side = tk.TOP)
 
 # Scrolled text
 txt1 = scrolledtext.ScrolledText(leftframe,width=40,height=10)
-txt1.pack(side = TOP)
+txt1.pack(side = tk.TOP)
 
 # bouton
 btn = Button(leftframe, text="Shuffle", command=clicked_shuffle)
-btn.pack(side = TOP, pady = 10)
+btn.pack(side = tk.TOP, pady = 10)
 	
 
 # Standard panel #################################################################
 
 rightframe = Frame(root, padx=10, pady=10)
-rightframe.pack(side = LEFT)
+rightframe.pack(side = tk.LEFT)
 
 rightframe1 = Frame(rightframe)
-rightframe1.pack(side = TOP)
+rightframe1.pack(side = tk.TOP)
 
 # Bouton
 btn = Button(rightframe1, text="Standard", command=clicked_standard)
-btn.pack(side = TOP)
+btn.pack(side = tk.TOP)
 
 # Textes
 lbl2 = Label(rightframe1, text="...")
-lbl2.pack(side = TOP)
+lbl2.pack(side = tk.TOP)
 
 # Scrolled text
 txt2 = scrolledtext.ScrolledText(rightframe1,width=40,height=10)
-txt2.pack(side = TOP)
+txt2.pack(side = tk.TOP)
 
 
 # Matching panel #######################################################################
 
 rightframe2 = Frame(rightframe)
-rightframe2.pack(side = TOP)
+rightframe2.pack(side = tk.TOP)
 
 canvas = Canvas(root, borderwidth=0, background="#ffffff") # we create the canvas
 rightframe = Frame(canvas, background="#ffffff") # we put the canvas in the frame
@@ -786,12 +785,12 @@ rightframe.bind("<Configure>", lambda event, canvas=canvas: onFrameConfigure(can
 # Rename Button Frame #########################################################################
 
 renameframe = Frame(root)
-renameframe.pack( side = LEFT, padx=10, pady=10)
+renameframe.pack( side = tk.LEFT, padx=10, pady=10)
 
 checkbutton = Button(renameframe, text="Check", fg="black", command=clicked_check)
-checkbutton.pack( side = TOP)
+checkbutton.pack( side = tk.TOP)
 
 renamebutton = Button(renameframe, text="Rename", fg="black", command=clicked_rename)
-renamebutton.pack( side = TOP, pady = 10)
+renamebutton.pack( side = tk.TOP, pady = 10)
 
 root.mainloop()
