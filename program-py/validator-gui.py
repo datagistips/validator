@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 
 # DATA
 import geopandas as gpd
@@ -357,7 +357,7 @@ def get_renamed_data(data):
 def is_ok_destination_columns():
 	'''
 	We control that the target mapping specification is OK
-	that is : no duplicate columns and 
+	that is : no duplicate columns 
 	'''
 	
 	# Controler
@@ -681,7 +681,7 @@ def clicked_rename():
 # Window ##################################################
 
 root = Tk()
-root.title("Validator-v.0.3")
+root.title("Validator-v0.4")
 
 
 # Data panel ################################################
