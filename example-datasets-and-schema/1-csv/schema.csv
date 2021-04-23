@@ -1,0 +1,15 @@
+name,description,type,pattern,enum
+id_site,Site id.,integer,,
+pattern,Site pattern,string,b[0-9],
+list_values,Field with a list of values,string,,"[""a"", ""b"", ""c""]"
+foo3,variable,string,,
+foo2,variable,integer,,
+date1,date,date,,
+date2,date,date,,
+date3,date,date,,
+ok1,is ok ?,boolean,,
+ok2,is ok ?,boolean,,
+ok3,is ok ?,boolean,,
+ok4,is ok ?,boolean,,
+insee1,City code,string,^([013-9]\d|2[AB1-9])\d{3}$,
+siret1,Enterprise code,string,^\d{14}$,

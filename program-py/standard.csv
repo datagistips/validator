@@ -1,6 +1,0 @@
-name,description,type,pattern
-id_site,identifiant du site,integer,
-date_maj,date de mise à jour,date,
-nb_sites,nombre de sites,integer,
-is_ok,ok ?,boolean,
-libelle,libellé du site,character,a[0-9]

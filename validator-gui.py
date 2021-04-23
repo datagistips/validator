@@ -11,7 +11,7 @@ from tkinter import scrolledtext, filedialog, ttk, messagebox
 # BASIC
 from os import path
 import math
-import re
+from re import search, match
 import os
 import sys
 import random
@@ -23,6 +23,50 @@ data = None
 standard = None
 input_file = None
 is_populated = False
+
+def control_date(date_text):
+    try:
+        res = datetime.strptime(date_text, "%Y-%m-%d")  # ISO 8601
+    except ValueError:
+        # ~ raise ValueError("Incorrect data format, should be YYYY-MM-DD")
+        return None
+    return res
+
+
+def control_date_alt1(date_text):
+    try:
+        res = datetime.strptime(date_text, "%d-%m-%Y")
+    except ValueError:
+        # ~ raise ValueError("Incorrect data format, should be YYYY-MM-DD")
+        return None
+    return res
+
+
+def control_date_alt2(date_text):
+    try:
+        res = datetime.strptime(date_text, "%y-%m-%d")
+    except ValueError:
+        # ~ raise ValueError("Incorrect data format, should be YYYY-MM-DD")
+        return None
+    return res
+
+
+def control_datetime(datetime_text):
+    try:
+        res = datetime.strptime(datetime_text, "%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        # ~ raise ValueError("Incorrect data format, should be YYYY-MM-DD")
+        return None
+    return res
+
+
+def control_time(time_ext):
+    try:
+        res = datetime.strptime(time_ext, "%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        # ~ raise ValueError("Incorrect data format, should be YYYY-MM-DD")
+        return None
+    return res
 
 
 def write_log(files, columns, log):
@@ -230,9 +274,9 @@ def  populate_standard(standard):
 	Displays schema field names and descriptions in the data schema information box
 	'''
 	
-	standard_fieldNames = standard.iloc[:,0]
-	standard_descriptions = standard.iloc[:,1]
-	standard_types = standard.iloc[:,2]
+	standard_fieldNames = standard['name']
+	standard_descriptions = standard['description']
+	standard_types = standard['type']
 	# ~ standard_pattern = standard.iloc[:,3]
 	
 	rows = list()
@@ -264,8 +308,8 @@ def clicked_data():
 	file = filedialog.askopenfilename(initialdir= path.dirname(__file__), filetypes=[("", ".csv .gpkg .shp")])
 	input_file = file
 	input_name = os.path.basename(input_file)
-	input_name_without_extension = re.search('(.*)\\.(.*)', input_file).group(1)
-	input_name_extension = re.search('(.*)\\.(.*)', input_file).group(2)    
+	input_name_without_extension = search('(.*)\\.(.*)', input_file).group(1)
+	input_name_extension = search('(.*)\\.(.*)', input_file).group(2)    
     
 	data = gpd.read_file(input_file, encoding = "utf-8")
 	
@@ -354,7 +398,7 @@ def get_renamed_data(data):
 	return(data2)
 	
 
-def is_ok_destination_columns():
+def no_duplicate_columns():
 	'''
 	We control that the target mapping specification is OK
 	that is : no duplicate columns 
@@ -392,12 +436,6 @@ def is_ok(data_var, to_type):
 
     >> True
     """
-
-    # ~ print("----")
-    # ~ print(data_var)
-    print("> to_type", to_type)
-    print("> type d'origine : ", data_var.dtype)
-    # ~ print("> type de destination : ", to_type)
 
     if to_type in ("character", "text", "string"):
         if data_var.dtype == "object":
@@ -603,21 +641,21 @@ def clicked_check():
 		if to_col == '_%s'%from_col:
 			ok = True
 		else:
+			data_var = data[from_col]
 			target_type = get_type_of_var_in_standard(standard, to_col)
 			
-			# Is type correct
-			data_var = data[from_col]
+			# Is type correct ?
 			ok = is_ok(data_var, target_type)
 		
 		# Set text
-		if ok:
+		if ok == True :
 			combo_text = 'OK'
 			combo_color = 'white'
 		else:
 			combo_text = 'NOT OK'
 			combo_color = 'red'
 		
-		label_control = Label(rightframe, text=combo_text, bg='white', color = combo_color)
+		label_control = Label(rightframe, text = combo_text, bg = combo_color)
 		label_control.grid(row=i, column=2)
 		labels_control.append(label_control)
 	
@@ -629,7 +667,7 @@ def clicked_rename():
 	and generates a source to target specification file (mapping file)
 	'''
 	
-	ok = is_ok_destination_columns()
+	ok = no_duplicate_columns()
 	
 	if ok is not True:
 		return()
@@ -703,7 +741,7 @@ txt1.pack(side = TOP)
 
 # bouton
 btn = Button(leftframe, text="Shuffle", command=clicked_shuffle)
-btn.pack(side = TOP)
+btn.pack(side = TOP, pady = 10)
 	
 
 # Standard panel #################################################################
