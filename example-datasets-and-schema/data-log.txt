@@ -1,13 +1,13 @@
-Date and time : 07/04/2021 13:48:27
+Date and time : 09/04/2021 21:42:19
 ------------------------
-Input data : data.csv
-Input data Path : C:/Users/mathieu/Desktop/datagistips/geo-hack/2103-validator/github/validator/example-datasets-and-schema/data.csv
+Input data : data.gpkg
+Input data Path : C:/Users/mathieu/Desktop/datagistips/geo-hack/2103-validator/github/validator/example-datasets-and-schema/data.gpkg
 Data schema : standard.csv
 Data schema Path : C:/Users/mathieu/Desktop/datagistips/geo-hack/2103-validator/github/validator/example-datasets-and-schema/standard.csv
 Data mapping : data-mapping.csv
 Data mapping Path : C:/Users/mathieu/Desktop/datagistips/geo-hack/2103-validator/github/validator/example-datasets-and-schema/data-mapping.csv
-Output data : data-mapped.csv
-Output data Path : C:/Users/mathieu/Desktop/datagistips/geo-hack/2103-validator/github/validator/example-datasets-and-schema/data-mapped.csv
+Output data : data-mapped.gpkg
+Output data Path : C:/Users/mathieu/Desktop/datagistips/geo-hack/2103-validator/github/validator/example-datasets-and-schema/data-mapped.gpkg
 ------------------------
 [SCHEMA]
 id_site : identifiant du site
@@ -24,7 +24,6 @@ is_ok <- __
 libelle <- __
 ------------------------
 [DATA -> SCHEMA]
-fid -> __
 id -> __
 lib -> __
 date -> __
