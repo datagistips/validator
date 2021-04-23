@@ -121,7 +121,7 @@ def write_log(files, columns, log):
 	f.close()
 	
 	
-def populate(frame, data = None, standard = None):
+def populate_source_target(frame, data = None, standard = None):
 	'''
 	Function that populates the right panel
 	with the source and target columns to match
@@ -152,11 +152,13 @@ def populate(frame, data = None, standard = None):
 	for row, elt in enumerate(data_colonnes):
 		if elt != 'geometry': # we don't allow renaming of geometry columns, when data is spatial (gpkg or shp)
 			
+			# 1 - Labels
 			# Text with the source variable name
 			label = Label(rightframe, text="%s" % elt, bg='white')
 			label.grid(row=row, column=0)
 			labels.append(label)
 			
+			# 2 - Comboboxes
 			# If standard file/data is specified
 			# then we add the standard columns comboboxes
 			# the user will choose in the lists/combos which target column corresponds to each source column
@@ -174,7 +176,12 @@ def populate(frame, data = None, standard = None):
 				combo.grid(row=row, column=1)
 
 				combos.append(combo) # we add the combo to the list of combos. combos will help when renaming data
-	
+				
+				# 3 - Labels for controlling
+				label_control = Label(rightframe, text="Press 'Check'", bg='white')
+				label_control.grid(row=row, column=2)
+				labels.append(label_control)
+			
 		is_populated = True
 
 
@@ -217,7 +224,7 @@ def  print_data(data):
 	txt1.configure(state='disabled')
 	
 
-def  print_standard(standard):
+def  populate_standard(standard):
 	'''
 	Displays schema field names and descriptions in the data schema information box
 	'''
@@ -272,7 +279,7 @@ def clicked_data():
 	lbl1.config(text=input_name)
 
 	# Update data mapping box with the list of columns
-	populate(rightframe, data, standard)
+	populate_source_target(rightframe, data, standard)
     
 
 def clicked_standard():
@@ -290,11 +297,11 @@ def clicked_standard():
 	lbl2.config(text = standard_name)
 	
 	# We display information in the data information box
-	print_standard(standard)
+	populate_standard(standard)
 	
 	if data is not None:
 		# Populate comboboxes (list of variables in the right panel)
-		populate(rightframe, data, standard)
+		populate_source_target(rightframe, data, standard)
 	
 	
 def clicked_shuffle():
@@ -361,6 +368,7 @@ def is_ok_destination_columns():
 		return(False)
 	else:
 		return(True)
+
     
 def clicked_check():
 	'''
@@ -372,6 +380,10 @@ def clicked_check():
 	
 	for from_col, to_col in d.items():
 		print(from_col, to_col)
+		
+		# Is type correct
+		
+		# if type is not correct, set color of label red, if not green
 	
 	
 def clicked_rename():
@@ -502,10 +514,10 @@ rightframe.bind("<Configure>", lambda event, canvas=canvas: onFrameConfigure(can
 renameframe = Frame(root)
 renameframe.pack( side = LEFT, padx=10, pady=10)
 
-renamebutton = Button(renameframe, text="Rename", fg="black", command=clicked_rename)
-renamebutton.pack( side = TOP)
-
 checkbutton = Button(renameframe, text="Check", fg="black", command=clicked_check)
-checkbutton.pack( side = TOP, pady = 10)
+checkbutton.pack( side = TOP)
+
+renamebutton = Button(renameframe, text="Rename", fg="black", command=clicked_rename)
+renamebutton.pack( side = TOP, pady = 10)
 
 root.mainloop()
