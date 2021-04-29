@@ -465,6 +465,8 @@ def is_ok_character(data_var):
 
 
 def is_ok_integer(data_var):
+	
+    print('integer')
     if data_var.dtype == "int64":
         return True
     elif data_var.dtype == "float64":
@@ -638,25 +640,25 @@ def is_ok(data_var, to_type):
     """
 
     if to_type in ("character", "text", "string"):
-        is_ok_character(data_var)
+        return(is_ok_character(data_var))
 
     elif to_type == "integer":
-        is_ok_integer(data_var)
+        return(is_ok_integer(data_var))
 
     elif to_type in ("float", "number"):
-        is_ok_float(data_var)
+        return(is_ok_float(data_var))
 
     elif to_type == "boolean":
-        is_ok_boolean(data_var)
+        return(is_ok_boolean(data_var))
 
     elif to_type == "date":
-        is_ok_date(data_var)
+        return(is_ok_date(data_var))
 
     elif to_type == "datetime":
-        is_ok_datetime(data_var)
+        return(is_ok_datetime(data_var))
 
     elif to_type == "duration":
-        is_ok_duration(data_var)
+        return(is_ok_duration(data_var))
 
 
 def read_data(input_data):
@@ -706,6 +708,7 @@ def clicked_check():
 
             # Is type correct ?
             ok = is_ok(data_var, target_type)
+            print("toto : ", from_col, ok, data_var, 'TARGET TYPE : ', target_type)
 
         # Set text
         if ok == True:
