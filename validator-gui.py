@@ -25,6 +25,7 @@ import os
 import sys
 import random
 from datetime import datetime
+import pathlib
 
 # GLOBAL VARIABLES
 global data, standard, input_file, columns_mapped, is_populated
@@ -279,7 +280,7 @@ def print_data(data):
         # if there are more than 9 unique items
         if len(elts) > 9:
             elts = random.sample(elts, 10)
-        
+
         # Conversion in String
         elts = [str(elt) for elt in elts]
 
@@ -322,6 +323,23 @@ def populate_standard(standard):
     txt2.configure(state="disabled")
 
 
+def load_standard(standard_file):
+
+    global standard, standard_name
+
+    standard_name = os.path.basename(standard_file)
+    standard = pd.read_csv(standard_file, encoding="iso-8859-1")
+
+    # We display standard label
+    lbl2.config(text=standard_name)
+
+    # We display information in the data information box
+    populate_standard(standard)
+
+    # Populate comboboxes (list of variables in the right panel)
+    populate_source_target(rightframe, data, standard)
+
+
 def clicked_data():
     """
     When we click on data, we update data information
@@ -329,6 +347,7 @@ def clicked_data():
     """
 
     global data, data_columns, input_file, input_name, input_name_without_extension, input_name_extension
+    global standard, standard_name, standard_file
 
     # Dialog
     file = filedialog.askopenfilename(
@@ -354,6 +373,17 @@ def clicked_data():
     # Update data mapping box with the list of columns
     populate_source_target(rightframe, data, standard)
 
+    # Check if standard.csv exists
+    p = pathlib.Path(file).parents[0].joinpath("standard.csv")
+    if p.is_file():
+        MsgBox = tk.messagebox.askquestion(
+            "Standard trouvé !",
+            "Un fichier standard.csv a été trouvé.\nSouhaitez-vous le charger ?",
+            icon="question",
+        )
+        if MsgBox == "yes":
+            load_standard(p)
+
 
 def clicked_standard():
     """
@@ -366,18 +396,8 @@ def clicked_standard():
         initialdir=os.path.dirname(__file__),
         filetypes=[("CSV delimited files", ".csv")],
     )
-    standard_file = file
-    standard_name = os.path.basename(standard_file)
-    standard = pd.read_csv(standard_file, encoding="iso-8859-1")
 
-    lbl2.config(text=standard_name)
-
-    # We display information in the data information box
-    populate_standard(standard)
-
-    if data is not None:
-        # Populate comboboxes (list of variables in the right panel)
-        populate_source_target(rightframe, data, standard)
+    load_standard(file)
 
 
 def clicked_shuffle():
@@ -468,8 +488,8 @@ def is_ok_character(data_var):
 
 
 def is_ok_integer(data_var):
-	
-    print('integer')
+
+    print("integer")
     if data_var.dtype == "int64":
         return True
     elif data_var.dtype == "float64":
@@ -643,25 +663,25 @@ def is_ok(data_var, to_type):
     """
 
     if to_type in ("character", "text", "string"):
-        return(is_ok_character(data_var))
+        return is_ok_character(data_var)
 
     elif to_type == "integer":
-        return(is_ok_integer(data_var))
+        return is_ok_integer(data_var)
 
     elif to_type in ("float", "number"):
-        return(is_ok_float(data_var))
+        return is_ok_float(data_var)
 
     elif to_type == "boolean":
-        return(is_ok_boolean(data_var))
+        return is_ok_boolean(data_var)
 
     elif to_type == "date":
-        return(is_ok_date(data_var))
+        return is_ok_date(data_var)
 
     elif to_type == "datetime":
-        return(is_ok_datetime(data_var))
+        return is_ok_datetime(data_var)
 
     elif to_type == "duration":
-        return(is_ok_duration(data_var))
+        return is_ok_duration(data_var)
 
 
 def read_data(input_data):
@@ -711,7 +731,7 @@ def clicked_check():
 
             # Is type correct ?
             ok = is_ok(data_var, target_type)
-            print("toto : ", from_col, ok, data_var, 'TARGET TYPE : ', target_type)
+            print("toto : ", from_col, ok, data_var, "TARGET TYPE : ", target_type)
 
         # Set text
         if ok == True:
