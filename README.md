@@ -4,6 +4,16 @@ Validator is a data exploration 🔍, validation ✔️ and restructuration ↔�
 
 ![](images/demo.gif)
 
+## Install
+[Install Python (for instance, v3.9)](https://www.python.org/downloads/)
+
+Once python installed, open your Command Line Interface and type :
+
+	git clone https://github.com/datagistips/validator.git # clones validator from github
+	pip install -r requirements.txt                        # installs libraries
+	cd validator                                           # enters validator folder
+	python validator-gui.py                                # launches validator
+
 ## 📘 Quick start (in 4️⃣ steps)
 **Launch** validator
 
