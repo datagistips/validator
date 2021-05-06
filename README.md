@@ -17,8 +17,7 @@ Once python installed, open your Command Line Interface and type :
 ## 📘 Quick start (in 4️⃣ steps)
 **Launch** validator
 
-	RUN-validator-gui-py2.py # if python2
-	RUN-validator-gui-py3.py # if python3
+	python validator-gui.py
 
 1️⃣ Load your **data**
 
