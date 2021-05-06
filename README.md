@@ -69,7 +69,7 @@ The data mapping file **keeps track** of your restructuration process. You can u
 ## 🚗 Road map
 - [x] control data types (integer, float, etc...)
 - [ ] control regexes (`^[A-Za-z\s\-\u00C0-\u00FF]+$`, etc...)
-- [ ] CLI Program
+- [x] [CLI Program](https://github.com/datagistips/validator-cli)
 
 ## Author & Licence
 - Mathieu Rajerison
