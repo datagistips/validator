@@ -279,6 +279,9 @@ def print_data(data):
         # if there are more than 9 unique items
         if len(elts) > 9:
             elts = random.sample(elts, 10)
+        
+        # Conversion in String
+        elts = [str(elt) for elt in elts]
 
         v = ",".join(elts)
         v = data_colonnes[i] + " : " + v
